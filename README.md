@@ -14,3 +14,7 @@ Tools: Python 3.11.2, SQLite3 3.37.0
 - Visit `http://127.0.0.1:5000/api/info/` for filtering info
 - Visit `http://127.0.0.1:5000/api/timeline/?startDate=2018-01-01&endDate=2018-07-01&Grouping=weekly&Type=cumulative&stars=5` as an timeline example
 - Run tests `python3 -m pytest`
+
+### 1.3 Production environment
+- Type `export FLASK_ENV=prodution` and `flask run` in order to run app in the production environment.
+- This uses `config.py` with private settings, don't share this file. It was added just for the explanation.
