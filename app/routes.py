@@ -27,7 +27,7 @@ def get_info():
             "brand": "String",
             "source": "String",
             "stars": "Integer",
-        }
+        },
     }
 
 

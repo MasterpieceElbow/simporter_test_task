@@ -1,7 +1,6 @@
 from datetime import datetime, timedelta
 
 from sqlalchemy import func, select
-from sqlalchemy.orm import Session
 
 from . import schemas
 from . import models
@@ -18,11 +17,11 @@ def get_events(db):
 
 
 def group_by_days(
-            days: int,
-            events: list[tuple[str, int]],
-            start: datetime.date,
-            end: datetime.date,
-        ) -> dict[str, int]:
+    days: int,
+    events: list[tuple[str, int]],
+    start: datetime.date,
+    end: datetime.date,
+) -> dict[str, int]:
     group = {}
     date_ = start
     while date_ < end:
@@ -32,7 +31,7 @@ def group_by_days(
         event_date = datetime.strptime(date_, "%Y-%m-%d").date()
         diff = (event_date - start).days % days
         group[event_date - timedelta(diff)] += count
-    return ({str(date_): count for date_, count in group.items()})
+    return {str(date_): count for date_, count in group.items()}
 
 
 def to_cumulative(group: dict[str, int]) -> None:
@@ -43,14 +42,12 @@ def to_cumulative(group: dict[str, int]) -> None:
 
 
 def get_timeline(db, query: schemas.Timeline) -> list[dict]:
-    queryset = (
-        select(
-            func.date(models.Event.timestamp, 'unixepoch'),
-            func.count(models.Event.id)
-        ).filter(
-            func.date(models.Event.timestamp, 'unixepoch') < query.endDate,
-            func.date(models.Event.timestamp, 'unixepoch') >= query.startDate,
-        )
+    queryset = select(
+        func.date(models.Event.timestamp, "unixepoch"),
+        func.count(models.Event.id),
+    ).filter(
+        func.date(models.Event.timestamp, "unixepoch") < query.endDate,
+        func.date(models.Event.timestamp, "unixepoch") >= query.startDate,
     )
     if query.asin:
         queryset = queryset.filter(models.Event.asin == query.asin)
@@ -62,8 +59,8 @@ def get_timeline(db, query: schemas.Timeline) -> list[dict]:
         queryset = queryset.filter(models.Event.stars == query.stars)
 
     queryset = queryset.group_by(
-            func.date(models.Event.timestamp, 'unixepoch')
-        ).order_by(models.Event.timestamp)
+        func.date(models.Event.timestamp, "unixepoch")
+    ).order_by(models.Event.timestamp)
 
     events = db.session.execute(queryset).all()
     if query.Grouping == schemas.TimelineGrouping.weekly:

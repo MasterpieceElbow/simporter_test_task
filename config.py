@@ -3,7 +3,7 @@ class Config:
     TESTING = False
     SECRET_KEY = "1g90ekG1EEgwkn34gn2wg"
     SQLALCHEMY_DATABASE_URI = "sqlite:///./production.db"
-    
+
 
 class ProductionConfig(Config):
     pass
